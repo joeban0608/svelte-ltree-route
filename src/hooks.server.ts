@@ -1,7 +1,10 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import * as auth from '$lib/server/auth';
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, ServerInit } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import path from 'node:path';
+import { db } from '$lib/server/db';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -34,4 +37,20 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(handleParaglide, handleAuth);
+function _init() {
+	return async () => {
+		try {
+			await migrate(db, { migrationsFolder: path.resolve('.') + '/migrations' });
+		} catch (error) {
+			console.error('Migration failed:', error);
+			process.exit(1);
+		}
+	};
+}
+export const init: ServerInit = _init();
+
+export const handle: Handle = sequence(
+	handleParaglide,
+	handleAuth
+	// autoMigrate
+);
