@@ -7,29 +7,14 @@
 		NavUl,
 		DarkMode,
 		NavLi,
-		Sidebar,
-		SidebarDropdownWrapper,
-		SidebarGroup,
-		SidebarItem,
 		uiHelpers,
-		SidebarButton,
-
 		Button
-
 	} from 'flowbite-svelte';
 	import '../app.css';
-	import {
-		ArrowRightToBracketOutline,
-		ChartOutline,
-		EditSolid,
-		GridSolid,
-		MailBoxSolid,
-		ShoppingBagSolid,
-		UserSolid
-	} from 'flowbite-svelte-icons';
-
-	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
+	import Icon from '@iconify/svelte';
+	import { slide } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
 
 	interface Props {
 		children: Snippet;
@@ -38,12 +23,10 @@
 	let { children }: Props = $props();
 
 	const spanClass = 'flex-1 ms-3 whitespace-nowrap';
-	const demoSidebarUi = uiHelpers();
-	let isDemoOpen = $state(false);
-	const closeDemoSidebar = demoSidebarUi.close;
-	$effect(() => {
-		isDemoOpen = demoSidebarUi.isOpen;
-	});
+	let isSidebarOpen = $state(true);
+	function toggleSidebar() {
+		isSidebarOpen = !isSidebarOpen;
+	}
 </script>
 
 <svelte:body
@@ -51,8 +34,9 @@
 		'bg-white',
 		'text-black',
 		'dark:bg-gradient-to-r',
-		'dark:from-purple-900',
-		'dark:to-gray-900',
+		'dark:from-gray-950',
+		'dark:via-purple-950',
+		'dark:to-gray-950',
 		'dark:text-white'
 	]}
 />
@@ -82,29 +66,28 @@
 	</NavUl>
 </Navbar>
 
-<SidebarButton
-	onclick={demoSidebarUi.toggle}
-	class="fixed top-14 !bg-gray-800 p-2"
-	style="z-index:99"
-/>
 <div class="relative h-screen pt-24 md:pt-20">
-	<Sidebar
-		isSingle={false}
-		backdrop={false}
-		isOpen={isDemoOpen}
-		closeSidebar={closeDemoSidebar}
-		params={{ x: -50, duration: 50 }}
-		position="absolute"
-		activeClass="p-2"
-		nonActiveClass="p-2"
-		class="top-auto bottom-0 z-50 h-[calc(100vh-3.5rem)] pt-12 md:h-[calc(100vh-5rem)]"
-	>
-		<SidebarGroup>
-			<Button>
-				+ Create
+	{#if isSidebarOpen}
+		<aside
+			transition:slide={{ axis: 'x', duration: 300, easing: cubicInOut }}
+			class="fixed top-auto bottom-0 left-0 z-50 h-[calc(100vh-3.5rem)] w-64 bg-white md:h-[calc(100vh-5rem)] dark:bg-gray-800"
+		>
+			<div class="cursor-pointer p-4">
+				<Button color="dark" onclick={toggleSidebar}>
+					<Icon icon="mdi:arrow-collapse-left" />
+				</Button>
+			</div>
+		</aside>
+	{:else}
+		<div
+			class="fixed top-24 left-4 z-50 cursor-pointer"
+			transition:slide={{ duration: 300, easing: cubicInOut }}
+		>
+			<Button color="dark" onclick={toggleSidebar}>
+				<Icon icon="mdi:arrow-collapse-right" />
 			</Button>
-		</SidebarGroup>
-	</Sidebar>
+		</div>
+	{/if}
 	<main class="z-0 h-full md:pl-64">
 		{@render children()}
 	</main>
