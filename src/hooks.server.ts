@@ -1,6 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import * as auth from '$lib/server/auth';
-import type { Handle, ServerInit } from '@sveltejs/kit';
+import type { Handle, HandleServerError, ServerInit } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import path from 'node:path';
@@ -37,7 +37,7 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-function _init() {
+function _init(): ServerInit {
 	return async () => {
 		try {
 			await migrate(db, { migrationsFolder: path.resolve('.') + '/migrations' });
@@ -47,6 +47,18 @@ function _init() {
 		}
 	};
 }
+
+function error(): HandleServerError {
+	return async ({ error, event, status, message }) => {
+		console.error('Error occurred:', error, event, status, message);
+
+		return {
+			status: 'error',
+			code: status,
+			message
+		};
+	};
+}
 export const init: ServerInit = _init();
 
 export const handle: Handle = sequence(
@@ -54,3 +66,5 @@ export const handle: Handle = sequence(
 	handleAuth
 	// autoMigrate
 );
+
+export const handleError: HandleServerError = error();

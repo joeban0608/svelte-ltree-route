@@ -8,6 +8,20 @@
       "when": 1753977245645,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1754159214757,
+      "tag": "0001_ltree",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754159653640,
+      "tag": "0002_docs",
+      "breakpoints": true
     }
   ]
 }
