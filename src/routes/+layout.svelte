@@ -88,7 +88,11 @@
 			</Button>
 		</div>
 	{/if}
-	<main class="z-0 h-full {isSidebarOpen ? 'md:pl-64' : 'md:pl-20'}">
+	<main
+		class="z-0 h-full {isSidebarOpen
+			? 'md:pl-64'
+			: 'md:pl-20'} transition-[padding-left] duration-300 ease-in-out"
+	>
 		{@render children()}
 	</main>
 </div>
