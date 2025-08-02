@@ -1,12 +1,6 @@
 <script lang="ts">
 	import classList from '$lib/action/classList';
-	import {
-		Navbar,
-		NavBrand,
-		NavHamburger,
-		NavUl,
-		DarkMode,
-		NavLi	} from 'flowbite-svelte';
+	import { Navbar, NavBrand, NavHamburger, NavUl, DarkMode, NavLi } from 'flowbite-svelte';
 	import '../app.css';
 	import type { Snippet } from 'svelte';
 	import SidebarLeft from '$lib/component/SidebarLeft.svelte';
@@ -18,12 +12,6 @@
 	let { children }: Props = $props();
 
 	const spanClass = 'flex-1 ms-3 whitespace-nowrap';
-
-	let isSidebarOpen = $state(true);
-	function toggleSidebar() {
-		isSidebarOpen = !isSidebarOpen;
-	}
-	
 </script>
 
 <svelte:body
@@ -60,16 +48,14 @@
 			activeClass="text-blue-700 dark:text-white"
 			nonActiveClass="text-gray-700 dark:text-gray-400">Home</NavLi
 		>
+		<NavLi
+			href="/ops-panel"
+			activeClass="text-blue-700 dark:text-white"
+			nonActiveClass="text-gray-700 dark:text-gray-400">OPS Panel</NavLi
+		>
 	</NavUl>
 </Navbar>
 
 <div class="relative h-screen pt-24 md:pt-20">
-	<SidebarLeft {isSidebarOpen} {toggleSidebar}/>
-	<main
-		class="z-0 h-full {isSidebarOpen
-			? 'md:pl-64'
-			: 'md:pl-20'} transition-[padding-left] duration-300 ease-in-out"
-	>
-		{@render children()}
-	</main>
+	{@render children()}
 </div>

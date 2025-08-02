@@ -3,13 +3,15 @@
 	import { slide } from 'svelte/transition';
 	import { Button } from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		isSidebarOpen: boolean;
 		toggleSidebar: () => void;
+		children?: Snippet;
 	}
 
-	let { isSidebarOpen = $bindable(), toggleSidebar }: Props = $props();
+	let { isSidebarOpen = $bindable(), toggleSidebar, children }: Props = $props();
 </script>
 
 {#if isSidebarOpen}
@@ -22,6 +24,7 @@
 				<Icon icon="mdi:arrow-collapse-left" />
 			</Button>
 		</div>
+		{@render children?.()}
 	</aside>
 {:else}
 	<div
