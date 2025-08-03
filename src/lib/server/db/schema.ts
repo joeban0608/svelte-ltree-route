@@ -38,9 +38,9 @@ export const docs = pgTable(
 			.primaryKey()
 			.default(sql`gen_random_uuid()`),
 		label: varchar('label', { length: 255 }).notNull(),
-		content: text('content').notNull(),
-		createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull(),
-		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).notNull(),
+		content: text('content').default(''),
+		createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+		updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
 		category: text('category', { enum: ['docs'] }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull().unique(),
 		deprecated: boolean('deprecated').notNull().default(false),
